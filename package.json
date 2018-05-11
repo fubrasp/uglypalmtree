@@ -1,0 +1,16 @@
+{
+  "name": "uglyplamtree",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "bulma": "^0.7.1",
+    "fontawesome": "^4.7.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "BERTRAND Guillaume",
+  "license": "ISC"
+}
