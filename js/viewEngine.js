@@ -1,3 +1,5 @@
+//TODO securise
+//TODO put alert on errors cases
 //***************DATA STRUCTURE FRAMEWORK***************
 /**
  * Queue
@@ -154,8 +156,6 @@ var refreshDisplay = function () {
     customTraversBF();
 };
 
-
-
 var customTraversBF = function() {
 
     var queue = new Queue();
@@ -232,24 +232,26 @@ var addNode = function() {
 
 addNodeButton.addEventListener("click", addNode, false);
 
-removeNodeButton.addEventListener("click", () => {
-    console.log('remove!');
-    var currentClickedNodeDOM = document.getElementById(currentClickedNode);
-    var parentCurrentClickedNodeDOM = currentClickedNodeDOM.parentNode;
-    var currentClikedNodeId = currentClickedNodeDOM.id;
-    var parentCurrentClikedNodeId = parentCurrentClickedNodeDOM.id;
-    tree.remove(currentClikedNodeId, parentCurrentClikedNodeId, tree.traverseBF);
-    parentCurrentClickedNodeDOM.removeChild(currentClickedNodeDOM);
-    console.log(tree);
-}, false);
+var removeNode = function(){
+        console.log('remove!');
+        var currentClickedNodeDOM = document.getElementById(currentClickedNode);
+        var parentCurrentClickedNodeDOM = currentClickedNodeDOM.parentNode;
+        var currentClikedNodeId = currentClickedNodeDOM.id;
+        var parentCurrentClikedNodeId = parentCurrentClickedNodeDOM.id;
+        tree.remove(currentClikedNodeId, parentCurrentClikedNodeId, tree.traverseBF);
+        parentCurrentClickedNodeDOM.removeChild(currentClickedNodeDOM);
+        console.log(tree);
+};
 
-logTreeButton.addEventListener("click", () => {
+removeNodeButton.addEventListener("click", removeNode, false);
+
+var logTree = function(){
     tree.traverseDF(function(node) {
         console.log(node.data);
     });
-}, false);
+};
 
-
+logTreeButton.addEventListener("click", logTree, false);
 //###display###
 var addCurrentSelectionBehavior = function(event){
     console.log(event.target);
