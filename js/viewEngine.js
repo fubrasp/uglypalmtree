@@ -129,19 +129,108 @@ function findIndex(arr, data) {
 }
 
 //***************tree initialisation***************
-var tree = new Tree('one');
+var tree = new Tree('root');
 
 //***************UX***************
+var currentClickedNode = tree._root;
+
+var initRoot = function () {
+    var treeDisplayZone = document.getElementById('tree-display');
+    var ulRoot=document.createElement('ul');
+
+    var liRoot=document.createElement('li');
+    liRoot.innerText=tree._root.data;
+    liRoot.id=tree._root.data;
+    liRoot.addEventListener("click", addCurrentSelectionBehavior, false);
+    ulRoot.appendChild(liRoot);
+    treeDisplayZone.appendChild(ulRoot);
+};
+
+var refreshDisplay = function () {
+    console.log('has refresh tree display');
+    var treeDisplayZone = document.getElementById('tree-display');
+    removeChildren(treeDisplayZone);
+    initRoot();
+    customTraversBF();
+};
+
+
+
+var customTraversBF = function() {
+
+    var queue = new Queue();
+
+    queue.enqueue(tree._root);
+
+    currentTree = queue.dequeue();
+
+
+    //var treeDisplayZone = document.getElementById('tree-display');
+    //var ulRoot=document.createElement('ul');
+
+    while (currentTree) {
+        console.log(currentTree);
+
+        var numberOfChildren = currentTree.children.length;
+
+        //if(numberOfChildren>0){
+        //    console.log('see children!!');
+        //}
+
+        //var ulFils = document.createElement('ul');
+
+        for (var i = 0, length = numberOfChildren; i < length; i++) {
+            queue.enqueue(currentTree.children[i]);
+
+            //var li=document.createElement('li');
+            //console.log(currentTree.children[i]);
+            //li.innerText=currentTree.children[i].data;
+            //li.id=currentTree.children[i].data;
+            //li.addEventListener("click", addCurrentSelectionBehavior, false);
+            //ulFils.append(li);
+        }
+        //liRoot.appendChild(ulFils);
+        //ulRoot.appendChild(liRoot);
+
+        currentTree = queue.dequeue();
+
+    }
+    //treeDisplayZone.appendChild(ulRoot);
+};
+
 
 //###Commands###
 var addNodeButton = document.getElementById('add-node');
 var removeNodeButton = document.getElementById('remove-node');
 var logTreeButton = document.getElementById('log-tree');
 
-addNodeButton.addEventListener("click", () => {
-    console.log('add!');
+var addNodeToCurrentClickedNode = function(addedNodeValue){
+    var currentClickedNodeDOM = document.getElementById(currentClickedNode);
+    console.log(currentClickedNode+"try add");
 
-}, false);
+    if(currentClickedNodeDOM!=undefined){
+        var fils=document.createElement('li');
+        fils.innerText=addedNodeValue;
+        fils.id=addedNodeValue;
+        fils.addEventListener("click", addCurrentSelectionBehavior, false);
+        currentClickedNodeDOM.appendChild(fils);
+    }
+};
+
+var addGraphicalNode = function() {
+    console.log('add!');
+    //mettre un uuid dans le noeud pour utiliser un id secure et permet l'ajout de plusieurs noeuds de meme nom
+    var inputTextForAddNode = document.getElementById('input-add-node-text');
+    var inputTextForAddNodeText = inputTextForAddNode.value;
+    console.log('PARENT: '+ currentClickedNode);
+    console.log('CHILD: '+ inputTextForAddNodeText);
+    if(inputTextForAddNodeText!=undefined){
+        tree.add(inputTextForAddNodeText, currentClickedNode, tree.traverseBF)
+        addNodeToCurrentClickedNode(inputTextForAddNodeText);
+    }
+};
+
+addNodeButton.addEventListener("click", addGraphicalNode, false);
 
 removeNodeButton.addEventListener("click", () => {
     console.log('remove!');
@@ -155,54 +244,17 @@ logTreeButton.addEventListener("click", () => {
 
 
 //###display###
+var addCurrentSelectionBehavior = function(event){
+    console.log(event.target);
+    console.log(event.target.id);
+    currentClickedNode=event.target.id;
+};
+
 var removeChildren = function(parentNode){
     while (parentNode.lastChild) {
         parentNode.removeChild(parentNode.lastChild);
     }
 }
-
-var customTraversBF = function(callback) {
-    var treeDisplayZone = document.getElementById('tree-display');
-    var ulRoot=document.createElement('ul');
-
-    var liRoot=document.createElement('li');
-    liRoot.innerText=tree._root.data;
-    ulRoot.appendChild(liRoot);
-    treeDisplayZone.appendChild(ulRoot);
-
-
-    var queue = new Queue();
-
-    queue.enqueue(this._root);
-
-    currentTree = queue.dequeue();
-
-    while (currentTree) {
-        console.log('see children!!');
-        var ul=document.createElement('ul');
-
-        for (var i = 0, length = currentTree.children.length; i < length; i++) {
-            queue.enqueue(currentTree.children[i]);
-
-            var li=document.createElement('li');
-            console.log(currentTree.children[i]);
-            li.innerText=currentTree.children[i];
-            ul.appendChild(li);
-        }
-
-        callback(currentTree);
-        currentTree = queue.dequeue();
-
-        treeDisplayZone.appendChild(ul);
-    }
-};
-
-var refreshDisplay = function () {
-    console.log('has refresh tree display');
-    var treeDisplayZone = document.getElementById('tree-display');
-    removeChildren(treeDisplayZone);
-    customTraversBF();
-};
 
 //When page start you need to show the root element
 refreshDisplay();
