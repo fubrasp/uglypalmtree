@@ -217,7 +217,7 @@ var addNodeToCurrentClickedNode = function(addedNodeValue){
     }
 };
 
-var addGraphicalNode = function() {
+var addNode = function() {
     console.log('add!');
     //mettre un uuid dans le noeud pour utiliser un id secure et permet l'ajout de plusieurs noeuds de meme nom
     var inputTextForAddNode = document.getElementById('input-add-node-text');
@@ -230,10 +230,17 @@ var addGraphicalNode = function() {
     }
 };
 
-addNodeButton.addEventListener("click", addGraphicalNode, false);
+addNodeButton.addEventListener("click", addNode, false);
 
 removeNodeButton.addEventListener("click", () => {
     console.log('remove!');
+    var currentClickedNodeDOM = document.getElementById(currentClickedNode);
+    var parentCurrentClickedNodeDOM = currentClickedNodeDOM.parentNode;
+    var currentClikedNodeId = currentClickedNodeDOM.id;
+    var parentCurrentClikedNodeId = parentCurrentClickedNodeDOM.id;
+    tree.remove(currentClikedNodeId, parentCurrentClikedNodeId, tree.traverseBF);
+    parentCurrentClickedNodeDOM.removeChild(currentClickedNodeDOM);
+    console.log(tree);
 }, false);
 
 logTreeButton.addEventListener("click", () => {
